@@ -1,0 +1,18 @@
+
+input, label {
+    display: block;
+}
+
+input {
+    width: 400px;
+    margin-bottom: 10px;
+}
+
+input, label, button {
+    font-size: 18px;
+}
+
+button {
+    width: 390px;
+    margin-top: 10px;
+}
