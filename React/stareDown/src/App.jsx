@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import StareDown from './components/StareDown'
-
-{/* <p style={{width: "60px", height: "60px", backgroundColor: color}}>{color}</p> */}
+import DefaultPage from './components/DefaultPage'
+import GlobalStyle from './assets/styles/globalStyle'
+import {PageStyle} from './assets/styles/globalStyle'
 
 function App() {
   return (
     <>
-      <StareDown />
+      <GlobalStyle />
+      <PageStyle>
+        <DefaultPage />
+      </PageStyle>
     </>
   )
 }

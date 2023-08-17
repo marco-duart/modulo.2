@@ -1,58 +1,77 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import {TitleOfCard, InforStatus, PageCard, ColorsBox, ColorBlock, ColorButton} from './style.js'
 
 const sortRandomNumber = () => Math.floor(Math.random() * 16)
 
-const sortColorString = () => `#${Math.floor(Math.random()*16777215).toString(16)}`
+const sortColorString = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`
 
-const StareDown = () => {
-    const initialColors = Array.from({ length: 16 }, () => sortColorString());
-    const [colors, setColors] = useState(initialColors)
-    const [result, setResult] = useState(colors[sortRandomNumber()])
-    const [randomNumber, setRandomNumber] = useState(sortRandomNumber())
-    const [lives, setLives] = useState(5)
+const resetColors = (array) => array.map(item => '#FFF')
+
+const amountLives = ["💚", "💚", "💚", "💚", "💚"]
+
+const StareDown = (prop) => {
+    const [colors, setColors] = useState(Array.from({ length: 16 }, () => '#FFF'))
+    const [result, setResult] = useState('')
+    const [lives, setLives] = useState(amountLives)
     const [score, setScore] = useState(0)
-    
 
-
-    const changeColors = () => {
-        const updatedColors = colors.map(item => sortColorString())
-        const updatedResult = updatedColors[Math.floor(Math.random() * updatedColors.length)]
-        setRandomNumber(sortRandomNumber())
-        while(updatedColors[randomNumber] === updatedResult) {
-            setRandomNumber(sortRandomNumber())
+    const changeColors = (restart = null) => {
+        if(restart) {
+            setLives(amountLives)
+            setScore(0)
+            prop.setScore(0)
         }
-        updatedColors[randomNumber] = updatedResult
-        
+        const updatedColors = colors.map(item => sortColorString())
+        const updatedResult = updatedColors[sortRandomNumber()]
+        let newRandomNumber = sortRandomNumber()
+        while (updatedColors[newRandomNumber] === updatedResult) {
+            newRandomNumber = sortRandomNumber()
+        }
+        updatedColors[newRandomNumber] = updatedResult
         setResult(updatedResult)
         setColors(updatedColors)
     }
 
     const gaming = (cor) => {
-        if(cor === result) {
-            const updatedScore = score + 10
-            setScore(updatedScore)
-            changeColors()
-        } else {
-            const updatedLives = lives - 1
-            setLives(updatedLives)
-            if(updatedLives > 0) {
+        if(cor !== "#FFF") {
+            if (cor === result) {
+                const updatedScore = score + 10
+                setScore(updatedScore)
+                prop.setScore(updatedScore)
                 changeColors()
             } else {
-                alert("Perdeu!")
+                const updatedLives = lives.filter((live, index) => index < lives.length-1)
+                setLives(updatedLives)
+                if (updatedLives.length <= 0) {
+                    setColors(resetColors(colors))
+                    prop.setScreen("GAMEOVER")
+                }
             }
         }
     }
 
+
+
     return (
-        <div>
-            <div style={{display: "flex"}}>
-                {colors.map(cor => <p key={Math.random()} style={{width: "60px", height: "60px", backgroundColor: cor}} onClick={() => gaming(cor)}></p>)}
-            </div>
-            <button onClick={() => changeColors()}>Change color</button>
-            <p>Pontos: {score} Vidas: {lives}</p>
-            <p style={{width: "60px", height: "60px", backgroundColor: result}}></p>
-        </div>
+        <PageCard>
+            <TitleOfCard>Find duplicate color</TitleOfCard>
+            <InforStatus>
+                Score: {score} Health: {lives}
+            </InforStatus>
+            <ColorsBox >
+                {colors.map((cor, index) => (
+                <ColorBlock
+                    key={index}
+                    style={{backgroundColor: cor }}
+                    onClick={() => gaming(cor)}
+                ></ColorBlock>
+                ))}
+            </ColorsBox >
+            <ColorButton onClick={() => changeColors(true)}>Begin</ColorButton>
+            {/* <ColorBlock style={{backgroundColor: result }}></ColorBlock> */}
+        </PageCard>
     )
 }
+
 
 export default StareDown
