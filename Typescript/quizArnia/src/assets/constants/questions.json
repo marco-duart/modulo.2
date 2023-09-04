@@ -1,0 +1,62 @@
+[
+  {
+    "id": 0,
+    "question": "Qual é a capital da França?",
+    "options": ["Londres", "Paris", "Berlim", "Roma"],
+    "correctOption": 1
+  },
+  {
+    "id": 1,
+    "question": "Qual é o maior planeta do sistema solar?",
+    "options": ["Vênus", "Marte", "Júpiter", "Saturno"],
+    "correctOption": 2
+  },
+  {
+    "id": 2,
+    "question": "Quem pintou a Mona Lisa?",
+    "options": ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Michelangelo"],
+    "correctOption": 1
+  },
+  {
+    "id": 3,
+    "question": "Qual é o elemento químico mais abundante na crosta terrestre?",
+    "options": ["Oxigênio", "Hidrogênio", "Silício", "Alumínio"],
+    "correctOption": 2
+  },
+  {
+    "id": 4,
+    "question": "Qual é o maior mamífero terrestre?",
+    "options": ["Elefante Africano", "Girafa", "Rinoceronte", "Baleia Azul"],
+    "correctOption": 0
+  },
+  {
+    "id": 5,
+    "question": "Qual é o segundo maior oceano do mundo?",
+    "options": ["Oceano Atlântico", "Oceano Índico", "Oceano Ártico", "Oceano Pacífico"],
+    "correctOption": 3
+  },
+  {
+    "id": 6,
+    "question": "Em que ano a Declaração de Independência dos Estados Unidos foi assinada?",
+    "options": ["1776", "1789", "1801", "1812"],
+    "correctOption": 0
+  },
+  {
+    "id": 7,
+    "question": "Qual é o maior osso do corpo humano?",
+    "options": ["Fêmur", "Tíbia", "Úmero", "Fíbula"],
+    "correctOption": 0
+  },
+  {
+    "id": 8,
+    "question": "Qual é o processo responsável pela produção de energia nas células?",
+    "options": ["Fotossíntese", "Digestão", "Osmose", "Respiração Celular"],
+    "correctOption": 3
+  },
+  {
+    "id": 9,
+    "question": "Qual é a montanha mais alta do mundo?",
+    "options": ["Monte Kilimanjaro", "Monte Everest", "Monte McKinley", "Monte Fuji"],
+    "correctOption": 1
+  }
+]
