@@ -1,10 +1,13 @@
 import { useEffect, useState, useCallback, useContext } from "react";
-import Column from "../../ui/components/KanbanColumn/Column";
 import { GetCards } from "../../data/services/card";
 import { CardContext } from "../../data/contexts/CardContext";
+import { HomeStyle } from "../../ui/styles/Home";
+import Column from "../../ui/components/KanbanColumn/Column";
+import Header from "../../ui/components/Header";
+import NewColumn from "../../ui/components/KanbanColumn/NewColumn";
 
 const Home = () => {
-  const {cards, setCards} = useContext(CardContext)
+  const { cards, setCards } = useContext(CardContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,12 +16,16 @@ const Home = () => {
     };
     fetchData();
   }, []);
-  console.log(cards)
+  console.log(cards);
   return (
     <>
-      <Column column="DONE"/>
-{/*       <Column column="DOING"/>
-      <Column column="DONE"/> */}
+      <Header />
+      <HomeStyle>
+        <NewColumn />
+        <Column column="TODO" />
+        <Column column="DOING"/>
+        <Column column="DONE"/>
+      </HomeStyle>
     </>
   );
 };

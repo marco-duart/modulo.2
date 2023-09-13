@@ -7,6 +7,15 @@ interface IData {
     "__v": number
 }
 
+interface CardContextData {
+    cards: IData[];
+    setCards: React.Dispatch<React.SetStateAction<IData[]>>;
+}
+
+interface CardContextProviderProps {
+    children: ReactNode;
+}
+
 type Props = {
     data: IData[]
 }

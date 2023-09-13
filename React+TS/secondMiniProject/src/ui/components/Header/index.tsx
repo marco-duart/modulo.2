@@ -1,6 +1,14 @@
+import { HeaderStyle } from "../../styles/Header"
+
 const Header = () => {
     return (
-        <div></div>
+        <HeaderStyle>
+            <div>Arnia Trello</div>
+            <div>
+                <div>Olá, User</div>
+                <div>Sair</div>
+            </div>
+        </HeaderStyle>
     )
 }
 

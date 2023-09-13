@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 
-const CardContext = createContext();
+const CardContext = createContext<CardContextData | null>(null);
 
-const CardContextProvider = ({ children }) => {
-    const [cards, setCards] = useState([])
+const CardContextProvider:React.FC<CardContextProviderProps> = ({ children }) => {
+    const [cards, setCards] = useState<IData[]>([])
 
     return (
         <CardContext.Provider value={{cards, setCards}}>
