@@ -11,10 +11,18 @@ type Props = {
 };
 
 const Card = ({ card, column }: Props) => {
+  const [editCard, setEditCard] = useState({
+    title: {
+      value: card.title,
+      valid: true,
+    },
+    content: {
+      value: card.title,
+      valid: true,
+    },
+  })
   const [isModalOpen, setIsModalOpen] = useState(false); //MODAL PARA CONFIRMAÇÃO DE EXCLUSÃO
   const [isEditing, setIsEditing] = useState<boolean>(false); //CONFIRMAR SE ESTÁ EDITANDO
-  const [editedTitle, setEditedTitle] = useState<string>(card.title); //VALOR TEMPORARIO DO TÍTULO
-  const [editedContent, setEditedContent] = useState<string>(card.content); //VALOR TEMPORÁRIO DO CONTEÚDO
   const context = useContext(CardContext); //CONTEXTO
   
   //UM IFZINHO PRA "OBRIGAR" O CONTEXTO A "SER" DE UM TIPO
@@ -88,6 +96,19 @@ const Card = ({ card, column }: Props) => {
     title: string,
     content: string
   ) => {
+    if(!editCard.title.value || !editCard.content.value) {
+      setEditCard({
+        title: {
+          ...editCard.title,
+          valid: editCard.title.value.trim() !== "", //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+        content: {
+          ...editCard.content,
+          valid: editCard.content.value.trim() !== "", //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+      })
+      return;
+    }
     const NewCards = await PutCard(id, title, content);
     if (NewCards) {
       setCards(NewCards);
@@ -97,8 +118,16 @@ const Card = ({ card, column }: Props) => {
 
   //CANCELAR A EDIÇÃO, RETORNA OS VALORES PADRÕES
   const handleCancelClick = () => {
-    setEditedTitle(card.title);
-    setEditedContent(card.content);
+    setEditCard({
+      title: {
+        value: card.title,
+        valid: true,
+      },
+      content: {
+        value: card.content,
+        valid: true,
+      },
+    })
     setIsEditing(false);
   };
 
@@ -108,14 +137,15 @@ const Card = ({ card, column }: Props) => {
         <>
           <input
             type="text"
-            value={editedTitle}
-            onChange={(element) => setEditedTitle(element.target.value)}
+            value={editCard.title.value}
+            onChange={(element) => setEditCard({...editCard, title: {value: element.target.value, valid: true}})}
           />
           <textarea
-            value={editedContent}
-            onChange={(element) => setEditedContent(element.target.value)}
+            value={editCard.content.value}
+            onChange={(element) => setEditCard({...editCard, content: {value: element.target.value, valid: true}})}
           />
-          <button onClick={() => handleSaveClick(card._id, editedTitle, editedContent)}>
+          {(!editCard.title.valid || !editCard.content.valid) && <small>Preencha todos os campos!</small>}
+          <button onClick={() => handleSaveClick(card._id, editCard.title.value, editCard.content.value)}>
             Salvar
           </button>
           <button onClick={() => handleCancelClick()}>Cancelar</button>

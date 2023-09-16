@@ -6,8 +6,17 @@ import { CardStyle } from "../../styles/Card";
 import { PostCard } from "../../../data/services/card";
 
 const NewColumn = () => {
-  const [cardTitle, setcardTitle] = useState<string>(""); //VALOR TEMPORARIO DO TÍTULO
-  const [cardContent, setcardContent] = useState<string>(""); //VALOR TEMPORÁRIO DO CONTEÚDO
+  //VALORES TEMPORÁRIOS PARA TITLE E CONTENT
+  const [cardForm, setCardForm] = useState({
+    title: {
+      value: "",
+      valid: true,
+    },
+    content: {
+      value: "",
+      valid: true,
+    },
+  });
   const context = useContext(CardContext);
 
   //UM IFZINHO PRA "OBRIGAR" O CONTEXTO A "SER" DE UM TIPO
@@ -19,8 +28,36 @@ const NewColumn = () => {
 
   //SALVAR A EDIÇÃO ENVIANDO PARA A API E RENDERIZANDO NOVAMENTE
   const handleSaveClick = async () => {
-    const NewCards = await PostCard(cardTitle, cardContent);
+    if (!cardForm.title.value || !cardForm.content.value) {
+      setCardForm({
+        title: {
+          ...cardForm.title,
+          valid: cardForm.title.value.trim() !== "", //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+        content: {
+          ...cardForm.content,
+          valid: cardForm.content.value.trim() !== "", //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+      });
+      console.log
+      return;
+    }
+    const NewCards = await PostCard(
+      cardForm.title.value,
+      cardForm.content.value
+    );
     if (NewCards) {
+      //LIMPANDO OS CAMPOS APÓS GERAR NOVO CARD
+      setCardForm({
+        title: {
+          value: "",
+          valid: true,
+        },
+        content: {
+          value: "",
+          valid: true,
+        },
+      })
       setCards(NewCards);
     }
   };
@@ -31,13 +68,26 @@ const NewColumn = () => {
       <CardStyle>
         <input
           type="text"
-          value={cardTitle}
-          onChange={(element) => setcardTitle(element.target.value)}
+          value={cardForm.title.value}
+          onChange={(element) =>
+            setCardForm({
+              ...cardForm,
+              title: { value: element.target.value, valid: true },
+            })
+          }
         />
         <textarea
-          value={cardContent}
-          onChange={(element) => setcardContent(element.target.value)}
+          value={cardForm.content.value}
+          onChange={(element) =>
+            setCardForm({
+              ...cardForm,
+              content: { value: element.target.value, valid: true },
+            })
+          }
         />
+        {(!cardForm.title.valid || !cardForm.content.valid) && (
+          <small>Preencha todos os campos!</small>
+        )}
         <button onClick={() => handleSaveClick()}>Salvar</button>
       </CardStyle>
     </ColumnStyle>
