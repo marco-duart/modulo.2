@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { CardContext } from "../../../data/contexts/CardContext";
 import { CardStyle } from "../../styles/Card";
 import { DeleteCard, PutCard, ChangeColumn } from "../../../data/services/card";
+import Modal from "react-modal";
 
 //TIPO ESPECÍFICO PARA ESSA PROP
 type Props = {
@@ -10,24 +11,36 @@ type Props = {
 };
 
 const Card = ({ card, column }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false); //MODAL PARA CONFIRMAÇÃO DE EXCLUSÃO
   const [isEditing, setIsEditing] = useState<boolean>(false); //CONFIRMAR SE ESTÁ EDITANDO
   const [editedTitle, setEditedTitle] = useState<string>(card.title); //VALOR TEMPORARIO DO TÍTULO
   const [editedContent, setEditedContent] = useState<string>(card.content); //VALOR TEMPORÁRIO DO CONTEÚDO
   const context = useContext(CardContext); //CONTEXTO
+  
   //UM IFZINHO PRA "OBRIGAR" O CONTEXTO A "SER" DE UM TIPO
   if (!context) {
     console.log("Num ta vindo nada");
     return null;
   }
   const { setCards } = context;
+  
+  //FUNÇÕES DE ABRIR E FECHAR MODAL
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
-  //DELETAR O CARD (IMPLEMENTAR O MODAL DE CONFIRMAÇÃO)
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  //DELETAR O CARD
   const handleDelete = async (id: string) => {
     const NewCards = await DeleteCard(id);
     if (NewCards) {
       setCards(NewCards);
     }
   };
+
   //MUDAR A COLUNA
   const handleChangeColumn = async (
     id: string,
@@ -63,10 +76,12 @@ const Card = ({ card, column }: Props) => {
       }
     }
   };
+
   //MUDAR PARA A RENDERIZAÇÃO DE ESTILO DE EDIÇÃO
   const handleEditClick = () => {
     setIsEditing(true);
   };
+
   //SALVAR A EDIÇÃO ENVIANDO PARA A API E RENDERIZANDO NOVAMENTE
   const handleSaveClick = async (
     id: string,
@@ -79,6 +94,7 @@ const Card = ({ card, column }: Props) => {
     }
     setIsEditing(false);
   };
+
   //CANCELAR A EDIÇÃO, RETORNA OS VALORES PADRÕES
   const handleCancelClick = () => {
     setEditedTitle(card.title);
@@ -99,11 +115,7 @@ const Card = ({ card, column }: Props) => {
             value={editedContent}
             onChange={(element) => setEditedContent(element.target.value)}
           />
-          <button
-            onClick={() =>
-              handleSaveClick(card._id, editedTitle, editedContent)
-            }
-          >
+          <button onClick={() => handleSaveClick(card._id, editedTitle, editedContent)}>
             Salvar
           </button>
           <button onClick={() => handleCancelClick()}>Cancelar</button>
@@ -113,7 +125,7 @@ const Card = ({ card, column }: Props) => {
           <h3>{card.title}</h3>
           <button onClick={handleEditClick}>Editar</button>
           <p>{card.content}</p>
-          <button onClick={() => handleDelete(card._id)}>Deletar</button>
+          <button onClick={() => openModal()}>Deletar</button>
           {(column === "DOING" || column === "DONE") && (
             <button onClick={() => handleChangeColumn(card._id, column, "-")}>
               -
@@ -126,6 +138,11 @@ const Card = ({ card, column }: Props) => {
           )}
         </>
       )}
+      <Modal isOpen={isModalOpen} onRequestClose={closeModal} contentLabel="Confirmação de Exclusão">
+        <h2>DESEJA REALMENTE EXCLUIR ESTE CARD?</h2>
+        <button onClick={() => closeModal()}>NÃO</button>
+        <button onClick={() => handleDelete(card._id)}>SIM</button>
+      </Modal>
     </CardStyle>
   );
 };

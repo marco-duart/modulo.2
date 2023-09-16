@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 
 
 const Header = () => {
+    const userName = localStorage.getItem("user");
     return (
         <HeaderStyle>
             <div>Arnia Trello</div>
             <div>
-                <div>Olá, User</div>
+                {userName && <div>Olá, {userName}</div>}
                 <div><Link to="/">Sair</Link></div>
             </div>
         </HeaderStyle>

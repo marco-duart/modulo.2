@@ -9,13 +9,15 @@ type Props = {
 
 const Column = ({ column }: Props) => {
   const context = useContext(CardContext);
+
   //UM IFZINHO PRA "OBRIGAR" O CONTEXTO A "SER" DE UM TIPO
   if (!context) {
     console.log("Num ta vindo nada");
     return null;
   }
-  const { cards, setCards } = context;
+  const { cards } = context;
 
+  //SEPARANDO OS CARDS ESPECÍFICOS DA COLUNA
   const columnCards: IData[] = cards.filter(
     (card: IData) => card.column === column
   );

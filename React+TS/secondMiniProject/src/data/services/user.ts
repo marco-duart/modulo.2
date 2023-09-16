@@ -20,10 +20,10 @@ export const Login = async (email: string, password: string) => {
     const userName = userData.data.name;
 
     localStorage.setItem("token", token);
+    localStorage.setItem("user", userName);
     return userName;
   } catch (error) {
     if (isAxiosError(error)) {
-      //retorna o valor no retorno da "response"
       return error.response?.status
     }
   }

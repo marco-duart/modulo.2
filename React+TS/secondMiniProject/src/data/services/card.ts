@@ -13,12 +13,19 @@ export const GetCards = async () => {
   }
 };
 
-export const CreateCard = async () => {
+export const PostCard = async (title: string, content: string) => {
   try {
     const token = localStorage.getItem("token");
-    const cards = await api.post("/api/card", {
-      headers: { Authorization: token },
-    });
+    const cards = await api.post(
+      "/api/card",
+      { 
+        title, 
+        content 
+      },
+      {
+        headers: { Authorization: token },
+      }
+    );
     return cards.data;
   } catch (error) {
     console.log(error);
@@ -34,19 +41,18 @@ export const DeleteCard = async (id: string) => {
     return cards.data;
   } catch (error) {
     if (isAxiosError(error)) {
-      //retorna o valor no retorno da "response"
       return null;
     }
     return null;
   }
 };
 
-export const PutCard = async (id: string, title:string, content: string) => {
+export const PutCard = async (id: string, title: string, content: string) => {
   try {
     const token = localStorage.getItem("token");
     const cards = await api.put(
       `/api/card/${id}`,
-      { 
+      {
         title,
         content,
       },
