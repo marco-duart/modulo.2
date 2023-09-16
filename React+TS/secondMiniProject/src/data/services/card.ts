@@ -1,16 +1,77 @@
-import api from "./config"
+import { isAxiosError } from "axios";
+import api from "./config";
 
 export const GetCards = async () => {
   try {
-    /* const token = localStorage.getItem("token") */
+    const token = localStorage.getItem("token");
     const cards = await api.get("/api/card", {
-      headers: { Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MDBmYTQ3ODY2NTYzYmVhM2UxZDZjNiIsIm5hbWUiOiJNYXJjbyBEdWFydGUiLCJlbWFpbCI6Im1hcmNvQGR1YXJ0ZS5jb20iLCJpYXQiOjE2OTQ1NjI5MzAsImV4cCI6MTY5NDY0OTMzMH0.k68bP92KQGxtQEqrRBSWfCejs8q0xL6YrI_JvuR6xPw" },
-    })
-    return cards.data
+      headers: { Authorization: token },
+    });
+    return cards.data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
-// colunas possiveis: TODO, DOING E DONE
-// ESCRITOS DESSA FORMA E COM LETRAS MAIUSCULAS!!!
+export const CreateCard = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const cards = await api.post("/api/card", {
+      headers: { Authorization: token },
+    });
+    return cards.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const DeleteCard = async (id: string) => {
+  try {
+    const token = localStorage.getItem("token");
+    const cards = await api.delete(`/api/card/${id}`, {
+      headers: { Authorization: token },
+    });
+    return cards.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      //retorna o valor no retorno da "response"
+      return null;
+    }
+    return null;
+  }
+};
+
+export const PutCard = async (id: string, title:string, content: string) => {
+  try {
+    const token = localStorage.getItem("token");
+    const cards = await api.put(
+      `/api/card/${id}`,
+      { 
+        title,
+        content,
+      },
+      {
+        headers: { Authorization: token },
+      }
+    );
+    return cards.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const ChangeColumn = async (id: string, column: string) => {
+  try {
+    const token = localStorage.getItem("token");
+    const cards = await api.put(
+      `/api/card/${id}`,
+      { column },
+      {
+        headers: { Authorization: token },
+      }
+    );
+    return cards.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

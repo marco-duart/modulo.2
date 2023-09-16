@@ -1,11 +1,12 @@
 import { CardContextProvider } from "./data/contexts/CardContext";
-import Home from "./pages/home";
+import Login from "./pages/login";
+import Router from "./router";
 
 function App() {
   return (
     <>
       <CardContextProvider>
-        <Home />
+        <Router />
       </CardContextProvider>
     </>
   );

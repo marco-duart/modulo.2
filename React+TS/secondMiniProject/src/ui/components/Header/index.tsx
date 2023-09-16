@@ -1,4 +1,6 @@
 import { HeaderStyle } from "../../styles/Header"
+import { Link } from "react-router-dom";
+
 
 const Header = () => {
     return (
@@ -6,7 +8,7 @@ const Header = () => {
             <div>Arnia Trello</div>
             <div>
                 <div>Olá, User</div>
-                <div>Sair</div>
+                <div><Link to="/">Sair</Link></div>
             </div>
         </HeaderStyle>
     )

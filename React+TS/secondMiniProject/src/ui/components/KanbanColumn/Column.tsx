@@ -9,13 +9,13 @@ type Props = {
 
 const Column = ({ column }: Props) => {
   const context = useContext(CardContext);
-  //Um ifzinho pra "obrigar" o contexto ter um tipo
+  //UM IFZINHO PRA "OBRIGAR" O CONTEXTO A "SER" DE UM TIPO
   if (!context) {
     console.log("Num ta vindo nada");
     return null;
   }
-
   const { cards, setCards } = context;
+
   const columnCards: IData[] = cards.filter(
     (card: IData) => card.column === column
   );
@@ -23,7 +23,9 @@ const Column = ({ column }: Props) => {
     <ColumnStyle>
       <div>{column}</div>
       {columnCards.map((card: IData) => (
-        <Card card={card} />
+        <div key={card._id}>
+          <Card card={card} column={column}/>
+        </div>
       ))}
     </ColumnStyle>
   );

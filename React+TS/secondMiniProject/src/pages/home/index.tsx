@@ -7,24 +7,31 @@ import Header from "../../ui/components/Header";
 import NewColumn from "../../ui/components/KanbanColumn/NewColumn";
 
 const Home = () => {
-  const { cards, setCards } = useContext(CardContext);
+  const context = useContext(CardContext);
+  //UM IFZINHO PRA "OBRIGAR" O CONTEXTO A "SER" DE UM TIPO
+  if (!context) {
+    console.log("Num ta vindo nada");
+    return null;
+  }
+  const { setCards } = context;
 
   useEffect(() => {
     const fetchData = async () => {
       const newData = await GetCards();
-      setCards(newData);
+      if (newData) {
+        setCards(newData);
+      }
     };
     fetchData();
   }, []);
-  console.log(cards);
   return (
     <>
       <Header />
       <HomeStyle>
         <NewColumn />
         <Column column="TODO" />
-        <Column column="DOING"/>
-        <Column column="DONE"/>
+        <Column column="DOING" />
+        <Column column="DONE" />
       </HomeStyle>
     </>
   );
