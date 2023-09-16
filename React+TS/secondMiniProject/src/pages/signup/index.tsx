@@ -1,32 +1,78 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LoginStyle, ContainerLoginStyle } from "../../ui/styles/Login";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { SignUp } from "../../data/services/user";
+import Modal from "react-modal";
+
 
 const SignUpPage = () => {
-  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false); //MODAL PARA CONFIRMAÇÃO DE NOVO USUÁRIO
   const [newUserResult, setNewUserResult] = useState<number>();
-  const [repassword, setRepassword] = useState<string>();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
+    name: {
+      value: "",
+      valid: true,
+    },
+    email: {
+      value: "",
+      valid: true,
+    },
+    password: {
+      value: "",
+      valid: true,
+    },
+    repassword: {
+      value: "",
+      valid: true,
+    },
   });
 
   const handleSubmit = async () => {
+    if (!formData.name.value || !formData.email.value || !formData.password.value || !formData.repassword.value) {
+      setFormData({
+        name: {
+          ...formData.name,
+          valid: formData.name.value.trim() !== "" //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+        email: {
+          ...formData.email,
+          valid: formData.email.value.trim() !== "" //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+        password: {
+          ...formData.password,
+          valid: formData.password.value.trim() !== "" //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+        repassword: {
+          ...formData.repassword,
+          valid: formData.repassword.value.trim() !== "" //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+      });
+      setNewUserResult(400);//COD DE ERRO DO CLIENTE
+      return;
+    }
+    if (formData.password !== formData.repassword) {
+      setNewUserResult(400);//COD DE ERRO DO CLIENTE
+      return;
+    }
     const result = await SignUp(
-      formData.email,
-      formData.password,
-      formData.name
+      formData.email.value,
+      formData.password.value,
+      formData.name.value
     );
     if (typeof result === "number") {
-      console.log("Veio Number")
       setNewUserResult(result);
     }
     if (typeof result === "string") {
-      console.log("Veio String")
-      navigate("/");
+      openModal()
     }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -40,11 +86,12 @@ const SignUpPage = () => {
             type="name"
             id="name"
             name="name"
-            value={formData.name}
+            value={formData.name.value}
             onChange={(event) =>
-              setFormData({ ...formData, name: event.target.value })
+              setFormData({ ...formData, name: {value: event.target.value, valid: true} })
             }
           />
+          {(!formData.name.valid && newUserResult === 400) && <small>Insira o nome</small>}
         </div>
         <div>
           <label htmlFor="email">E-mail</label>
@@ -52,11 +99,12 @@ const SignUpPage = () => {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
+            value={formData.email.value}
             onChange={(event) =>
-              setFormData({ ...formData, email: event.target.value })
+              setFormData({ ...formData, email: {value: event.target.value, valid: true} })
             }
           />
+          {(!formData.email.valid && newUserResult === 400) && <small>Insira o e-mail!</small>}
         </div>
         <div>
           <label htmlFor="password">Senha</label>
@@ -64,11 +112,12 @@ const SignUpPage = () => {
             type="password"
             id="password"
             name="password"
-            value={formData.password}
+            value={formData.password.value}
             onChange={(event) =>
-              setFormData({ ...formData, password: event.target.value })
+              setFormData({ ...formData, password: {value: event.target.value, valid: true} })
             }
           />
+          {(!formData.password.valid && newUserResult === 400) && <small>Insira a senha!</small>}
         </div>
         <div>
           <label htmlFor="repassword">Repita sua senha</label>
@@ -76,14 +125,12 @@ const SignUpPage = () => {
             type="repassword"
             id="repassword"
             name="repassword"
-            value={repassword}
+            value={formData.repassword.value}
             onChange={(event) =>
-              setFormData({ ...formData, password: event.target.value })
+              setFormData({ ...formData, repassword: {value: event.target.value, valid: true} })
             }
           />
-        </div>
-        <div>
-          {newUserResult === 404 && <small>Usuário não cadastrado</small>}
+          {(!formData.repassword.valid && newUserResult === 400) && <small>Insira novamente a senha!</small>}
         </div>
         <div>
           <button onClick={() => handleSubmit()}>CADASTRAR</button>
@@ -91,6 +138,10 @@ const SignUpPage = () => {
         <div>
           <Link to="/">Voltar</Link>
         </div>
+        <Modal isOpen={isModalOpen} onRequestClose={closeModal} contentLabel="Confirmação de criação de usuário">
+        <h2>USUÁRIO CRIADO COM SUCESSO!</h2>
+        <button onClick={() => closeModal()}>OK</button>
+      </Modal>
       </LoginStyle>
     </ContainerLoginStyle>
   );

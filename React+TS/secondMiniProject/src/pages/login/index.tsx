@@ -1,19 +1,39 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LoginStyle, ContainerLoginStyle } from "../../ui/styles/Login";
 import { Link, useNavigate } from "react-router-dom";
 import { Login } from "../../data/services/user";
 
 const LoginPage = () => {
   localStorage.removeItem("token");
-  const [loginResult, setLoginResult] = useState<number>();
   const navigate = useNavigate();
+  const [loginResult, setLoginResult] = useState<number>();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: {
+      value: "",
+      valid: true,
+    },
+    password: {
+      value: "",
+      valid: true,
+    },
   });
 
   const handleSubmit = async () => {
-    const result = await Login(formData.email, formData.password);
+    if (!formData.email.value || !formData.password.value) {
+      setFormData({
+        email: {
+          ...formData.email,
+          valid: formData.email.value.trim() !== "" //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+        password: {
+          ...formData.password,
+          valid: formData.password.value.trim() !== "" //SE ESTIVER EM BRANCO, RESULTA EM FALSE
+        },
+      });
+      setLoginResult(400);//COD DE ERRO DO CLIENTE
+      return;
+    }
+    const result = await Login(formData.email.value, formData.password.value);
     if (typeof result === 'number') {
       setLoginResult(result);
     } 
@@ -32,14 +52,11 @@ const LoginPage = () => {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
-            onChange={(event) =>
-              setFormData({ ...formData, email: event.target.value })
-            }
+            value={formData.email.value}
+            onChange={(event) => setFormData({...formData, email: {value: event.target.value, valid: true,},})}
           />
-          {loginResult === 404 && (
-            <small>Usuário não cadastrado</small>
-          )}
+          {(!formData.email.valid && loginResult === 400) && <small>Insira o e-mail!</small>}
+          {loginResult === 404 && <small>Usuário não cadastrado</small>}
         </div>
         <div>
           <label htmlFor="password">Senha</label>
@@ -47,15 +64,11 @@ const LoginPage = () => {
             type="password"
             id="password"
             name="password"
-            value={formData.password}
-            onChange={(event) =>
-              setFormData({ ...formData, password: event.target.value })
-            }
+            value={formData.password.value}
+            onChange={(event) => setFormData({ ...formData, password: {value: event.target.value, valid: true} })}
           />
-          {loginResult === 401 && <small>Senha incorreta</small>}
-        </div>
-        <div>
-          {formData.email} &&& {formData.password}
+          {(!formData.password.valid && loginResult === 400) && <small>Insira a senha!</small>}
+          {loginResult === 401 && <small>Senha incorreta!</small>}
         </div>
         <div>
           <button onClick={() => handleSubmit()}>ENTRAR</button>
