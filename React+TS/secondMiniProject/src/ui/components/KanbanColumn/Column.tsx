@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { CardContext } from "../../../data/contexts/CardContext";
-import { ColumnStyle } from "../../styles/Column";
+import { ColumnStyle, TitleColumnStyle } from "../../styles/Column";
 import Card from "./Card";
 
 type Props = {
@@ -23,7 +23,9 @@ const Column = ({ column }: Props) => {
   );
   return (
     <ColumnStyle>
-      <div>{column}</div>
+      {column === "TODO" && <TitleColumnStyle>To Do</TitleColumnStyle>}
+      {column === "DOING" && <TitleColumnStyle>Doing</TitleColumnStyle>}
+      {column === "DONE" && <TitleColumnStyle>Done</TitleColumnStyle>}
       {columnCards.map((card: IData) => (
         <div key={card._id}>
           <Card card={card} column={column}/>

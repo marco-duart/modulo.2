@@ -1,9 +1,10 @@
 import { useContext } from "react";
 import { CardContext } from "../../../data/contexts/CardContext";
 import { useState } from "react";
-import { ColumnStyle } from "../../styles/Column";
-import { CardStyle } from "../../styles/Card";
+import { ColumnStyle, TitleColumnStyle } from "../../styles/Column";
+import { MidIconImg, TitleInputCardStyle, ContentInputCardStyle, CardStyle, IcoSectionCardStyle } from "../../styles/Card";
 import { PostCard } from "../../../data/services/card";
+import newIco from "../../../assets/image/new.png"
 
 const NewColumn = () => {
   //VALORES TEMPORÁRIOS PARA TITLE E CONTENT
@@ -64,9 +65,9 @@ const NewColumn = () => {
 
   return (
     <ColumnStyle>
-      <div>NEW</div>
+      <TitleColumnStyle>NEW</TitleColumnStyle>
       <CardStyle>
-        <input
+        <TitleInputCardStyle
           type="text"
           value={cardForm.title.value}
           onChange={(element) =>
@@ -76,7 +77,7 @@ const NewColumn = () => {
             })
           }
         />
-        <textarea
+        <ContentInputCardStyle
           value={cardForm.content.value}
           onChange={(element) =>
             setCardForm({
@@ -88,7 +89,9 @@ const NewColumn = () => {
         {(!cardForm.title.valid || !cardForm.content.valid) && (
           <small>Preencha todos os campos!</small>
         )}
-        <button onClick={() => handleSaveClick()}>Salvar</button>
+        <IcoSectionCardStyle>
+          <MidIconImg src={newIco} alt="save" onClick={() => handleSaveClick()}/>
+        </IcoSectionCardStyle>
       </CardStyle>
     </ColumnStyle>
   );

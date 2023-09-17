@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { LoginStyle, ContainerLoginStyle } from "../../ui/styles/Login";
-import { Link, useNavigate } from "react-router-dom";
+import { LoginStyle, ContainerLoginStyle, TitleLoginStyle, SectionLoginStyle, LabelLoginStyle, InputLoginStyle, ButtonLoginStyle, StyledLink, SmallLoginStyle } from "../../ui/styles/Login";
+import { useNavigate } from "react-router-dom";
 import { Login } from "../../data/services/user";
 
 const LoginPage = () => {
@@ -45,36 +45,36 @@ const LoginPage = () => {
   return (
     <ContainerLoginStyle>
       <LoginStyle>
-        <h1>Arnia Trello</h1>
-        <div>
-          <label htmlFor="email">E-mail</label>
-          <input
+        <TitleLoginStyle>Arnia Trello</TitleLoginStyle>
+        <SectionLoginStyle>
+          <LabelLoginStyle htmlFor="email">E-mail</LabelLoginStyle>
+          <InputLoginStyle
             type="email"
             id="email"
             name="email"
             value={formData.email.value}
             onChange={(event) => setFormData({...formData, email: {value: event.target.value, valid: true,},})}
           />
-          {(!formData.email.valid && loginResult === 400) && <small>Insira o e-mail!</small>}
-          {loginResult === 404 && <small>Usuário não cadastrado</small>}
-        </div>
-        <div>
-          <label htmlFor="password">Senha</label>
-          <input
+          {(!formData.email.valid && loginResult === 400) && <SmallLoginStyle>Insira o e-mail!</SmallLoginStyle>}
+          {loginResult === 404 && <SmallLoginStyle>Usuário não cadastrado</SmallLoginStyle>}
+        </SectionLoginStyle>
+        <SectionLoginStyle>
+          <LabelLoginStyle htmlFor="password">Senha</LabelLoginStyle>
+          <InputLoginStyle
             type="password"
             id="password"
             name="password"
             value={formData.password.value}
             onChange={(event) => setFormData({ ...formData, password: {value: event.target.value, valid: true} })}
           />
-          {(!formData.password.valid && loginResult === 400) && <small>Insira a senha!</small>}
-          {loginResult === 401 && <small>Senha incorreta!</small>}
+          {(!formData.password.valid && loginResult === 400) && <SmallLoginStyle>Insira a senha!</SmallLoginStyle>}
+          {loginResult === 401 && <SmallLoginStyle>Senha incorreta!</SmallLoginStyle>}
+        </SectionLoginStyle>
+        <div>
+          <ButtonLoginStyle onClick={() => handleSubmit()}>ENTRAR</ButtonLoginStyle>
         </div>
         <div>
-          <button onClick={() => handleSubmit()}>ENTRAR</button>
-        </div>
-        <div>
-          <Link to="/signup">Cadastre-se</Link>
+          <StyledLink to="/signup">Cadastre-se</StyledLink>
         </div>
       </LoginStyle>
     </ContainerLoginStyle>

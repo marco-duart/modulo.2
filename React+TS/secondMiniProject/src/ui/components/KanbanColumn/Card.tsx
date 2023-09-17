@@ -1,8 +1,27 @@
 import { useContext, useState } from "react";
 import { CardContext } from "../../../data/contexts/CardContext";
-import { CardStyle } from "../../styles/Card";
+import {
+  StyledModal,
+  NegateButton,
+  AcceptButton,
+  CardStyle,
+  SectionCardStyle,
+  TitleCardStyle,
+  TitleInputCardStyle,
+  ContentCardStyle,
+  ContentInputCardStyle,
+  IcoSectionCardStyle,
+  MidIconImg, 
+  LeftIconImg, 
+  RightIconImg,
+} from "../../styles/Card";
 import { DeleteCard, PutCard, ChangeColumn } from "../../../data/services/card";
-import Modal from "react-modal";
+import editIco from "../../../assets/image/edit.png";
+import prevIco from "../../../assets/image/previous.png";
+import nextIco from "../../../assets/image/next.png";
+import deleteIco from "../../../assets/image/delete.png";
+import saveIco from "../../../assets/image/save.png";
+import cancelIco from "../../../assets/image/cancel.png";
 
 //TIPO ESPECÍFICO PARA ESSA PROP
 type Props = {
@@ -20,18 +39,18 @@ const Card = ({ card, column }: Props) => {
       value: card.title,
       valid: true,
     },
-  })
+  });
   const [isModalOpen, setIsModalOpen] = useState(false); //MODAL PARA CONFIRMAÇÃO DE EXCLUSÃO
   const [isEditing, setIsEditing] = useState<boolean>(false); //CONFIRMAR SE ESTÁ EDITANDO
   const context = useContext(CardContext); //CONTEXTO
-  
+
   //UM IFZINHO PRA "OBRIGAR" O CONTEXTO A "SER" DE UM TIPO
   if (!context) {
     console.log("Num ta vindo nada");
     return null;
   }
   const { setCards } = context;
-  
+
   //FUNÇÕES DE ABRIR E FECHAR MODAL
   const openModal = () => {
     setIsModalOpen(true);
@@ -96,7 +115,7 @@ const Card = ({ card, column }: Props) => {
     title: string,
     content: string
   ) => {
-    if(!editCard.title.value || !editCard.content.value) {
+    if (!editCard.title.value || !editCard.content.value) {
       setEditCard({
         title: {
           ...editCard.title,
@@ -106,7 +125,7 @@ const Card = ({ card, column }: Props) => {
           ...editCard.content,
           valid: editCard.content.value.trim() !== "", //SE ESTIVER EM BRANCO, RESULTA EM FALSE
         },
-      })
+      });
       return;
     }
     const NewCards = await PutCard(id, title, content);
@@ -127,53 +146,71 @@ const Card = ({ card, column }: Props) => {
         value: card.content,
         valid: true,
       },
-    })
+    });
     setIsEditing(false);
   };
 
   return (
-    <CardStyle>
+    <>
       {isEditing ? (
-        <>
-          <input
+        <CardStyle>
+          <TitleInputCardStyle
             type="text"
             value={editCard.title.value}
-            onChange={(element) => setEditCard({...editCard, title: {value: element.target.value, valid: true}})}
+            onChange={(element) =>
+              setEditCard({
+                ...editCard,
+                title: { value: element.target.value, valid: true },
+              })
+            }
           />
-          <textarea
+          <ContentInputCardStyle
             value={editCard.content.value}
-            onChange={(element) => setEditCard({...editCard, content: {value: element.target.value, valid: true}})}
+            onChange={(element) =>
+              setEditCard({
+                ...editCard,
+                content: { value: element.target.value, valid: true },
+              })
+            }
           />
-          {(!editCard.title.valid || !editCard.content.valid) && <small>Preencha todos os campos!</small>}
-          <button onClick={() => handleSaveClick(card._id, editCard.title.value, editCard.content.value)}>
-            Salvar
-          </button>
-          <button onClick={() => handleCancelClick()}>Cancelar</button>
-        </>
+          {(!editCard.title.valid || !editCard.content.valid) && (
+            <small>Preencha todos os campos!</small>
+          )}
+          <IcoSectionCardStyle>
+            <LeftIconImg src={cancelIco} alt="cancel" onClick={() => handleCancelClick()}/>
+            <RightIconImg src={saveIco} alt="save" onClick={() => handleSaveClick(card._id, editCard.title.value, editCard.content.value)}/>
+          </IcoSectionCardStyle>
+        </CardStyle>
       ) : (
-        <>
-          <h3>{card.title}</h3>
-          <button onClick={handleEditClick}>Editar</button>
-          <p>{card.content}</p>
-          <button onClick={() => openModal()}>Deletar</button>
-          {(column === "DOING" || column === "DONE") && (
-            <button onClick={() => handleChangeColumn(card._id, column, "-")}>
-              -
-            </button>
-          )}
-          {(column === "TODO" || column === "DOING") && (
-            <button onClick={() => handleChangeColumn(card._id, column, "+")}>
-              +
-            </button>
-          )}
-        </>
+        <CardStyle>
+          <SectionCardStyle>
+            <TitleCardStyle>{card.title}</TitleCardStyle>
+            <RightIconImg
+              src={editIco}
+              alt="edit"
+              onClick={() => handleEditClick()}
+            />
+          </SectionCardStyle>
+          <ContentCardStyle>{card.content}</ContentCardStyle>
+          <IcoSectionCardStyle>
+              {(column === "DOING" || column === "DONE") && (<LeftIconImg src={prevIco} alt="previous" onClick={() => handleChangeColumn(card._id, column, "-")} />)}
+              <MidIconImg src={deleteIco} alt="delete" onClick={() => openModal()} />
+              {(column === "TODO" || column === "DOING") && (<RightIconImg src={nextIco} alt="edit" onClick={() => handleChangeColumn(card._id, column, "+")} />)}
+          </IcoSectionCardStyle>
+        </CardStyle>
       )}
-      <Modal isOpen={isModalOpen} onRequestClose={closeModal} contentLabel="Confirmação de Exclusão">
-        <h2>DESEJA REALMENTE EXCLUIR ESTE CARD?</h2>
-        <button onClick={() => closeModal()}>NÃO</button>
-        <button onClick={() => handleDelete(card._id)}>SIM</button>
-      </Modal>
-    </CardStyle>
+      <StyledModal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Confirmação de Exclusão"
+      >
+        <TitleCardStyle>DESEJA REALMENTE EXCLUIR ESTE CARD?</TitleCardStyle>
+        <SectionCardStyle>
+          <NegateButton onClick={() => closeModal()}>NÃO</NegateButton>
+          <AcceptButton onClick={() => handleDelete(card._id)}>SIM</AcceptButton>
+        </SectionCardStyle>
+      </StyledModal>
+    </>
   );
 };
 

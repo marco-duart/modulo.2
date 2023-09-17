@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { LoginStyle, ContainerLoginStyle } from "../../ui/styles/Login";
-import { Link } from "react-router-dom";
+import { LoginStyle, ContainerLoginStyle, TitleLoginStyle, SubtitleLoginStyle, SectionLoginStyle, LabelLoginStyle, InputLoginStyle, ButtonLoginStyle, StyledLink, SmallLoginStyle } from "../../ui/styles/Login";
 import { SignUp } from "../../data/services/user";
 import Modal from "react-modal";
 
@@ -106,11 +105,11 @@ const SignUpPage = () => {
   return (
     <ContainerLoginStyle>
       <LoginStyle>
-        <h1>Arnia Trello</h1>
-        <h2>Cadastro</h2>
-        <div>
-          <label htmlFor="name">Nome completo</label>
-          <input
+        <TitleLoginStyle>Arnia Trello</TitleLoginStyle>
+        <SubtitleLoginStyle>Cadastro</SubtitleLoginStyle>
+        <SectionLoginStyle>
+          <LabelLoginStyle htmlFor="name">Nome completo</LabelLoginStyle>
+          <InputLoginStyle
             type="name"
             id="name"
             name="name"
@@ -123,12 +122,12 @@ const SignUpPage = () => {
             }
           />
           {!formData.name.valid && newUserResult === 400 && (
-            <small>Insira o nome</small>
+            <SmallLoginStyle>Insira o nome</SmallLoginStyle>
           )}
-        </div>
-        <div>
-          <label htmlFor="email">E-mail</label>
-          <input
+        </SectionLoginStyle>
+        <SectionLoginStyle>
+          <LabelLoginStyle htmlFor="email">E-mail</LabelLoginStyle>
+          <InputLoginStyle
             type="email"
             id="email"
             name="email"
@@ -141,12 +140,12 @@ const SignUpPage = () => {
             }
           />
           {!formData.email.valid && newUserResult === 400 && (
-            <small>Insira o e-mail!</small>
+            <SmallLoginStyle>Insira o e-mail!</SmallLoginStyle>
           )}
-        </div>
-        <div>
-          <label htmlFor="password">Senha</label>
-          <input
+        </SectionLoginStyle>
+        <SectionLoginStyle>
+          <LabelLoginStyle htmlFor="password">Senha</LabelLoginStyle>
+          <InputLoginStyle
             type="password"
             id="password"
             name="password"
@@ -159,12 +158,12 @@ const SignUpPage = () => {
             }
           />
           {!formData.password.valid && newUserResult === 400 && (
-            <small>Insira a senha!</small>
+            <SmallLoginStyle>Insira a senha!</SmallLoginStyle>
           )}
-        </div>
-        <div>
-          <label htmlFor="repassword">Repita sua senha</label>
-          <input
+        </SectionLoginStyle>
+        <SectionLoginStyle>
+          <LabelLoginStyle htmlFor="repassword">Repita sua senha</LabelLoginStyle>
+          <InputLoginStyle
             type="password"
             id="repassword"
             name="repassword"
@@ -177,21 +176,21 @@ const SignUpPage = () => {
             }
           />
           {!formData.repassword.valid && newUserResult === 400 && (
-            <small>Insira novamente a senha!</small>
+            <SmallLoginStyle>Insira novamente a senha!</SmallLoginStyle>
           )}
+        </SectionLoginStyle>
+        <div>
+          <ButtonLoginStyle onClick={() => handleSubmit()}>CADASTRAR</ButtonLoginStyle>
         </div>
         <div>
-          <button onClick={() => handleSubmit()}>CADASTRAR</button>
-        </div>
-        <div>
-          <Link to="/">Voltar</Link>
+          <StyledLink to="/">Voltar</StyledLink>
         </div>
         <Modal
           isOpen={isModalOpen}
           onRequestClose={closeModal}
           contentLabel="Confirmação de criação de usuário"
         >
-          <h2>USUÁRIO CRIADO COM SUCESSO!</h2>
+          <SubtitleLoginStyle>USUÁRIO CRIADO COM SUCESSO!</SubtitleLoginStyle>
           <button onClick={() => closeModal()}>OK</button>
         </Modal>
       </LoginStyle>

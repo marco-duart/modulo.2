@@ -1,16 +1,15 @@
-import { HeaderStyle } from "../../styles/Header"
-import { Link } from "react-router-dom";
+import { HeaderStyle, TitleHeaderStyle, SectionHeaderStyle, TextHeaderStyle, StyledLink } from "../../styles/Header"
 
 
 const Header = () => {
     const userName = localStorage.getItem("user");
     return (
         <HeaderStyle>
-            <div>Arnia Trello</div>
-            <div>
-                {userName && <div>Olá, {userName}</div>}
-                <div><Link to="/">Sair</Link></div>
-            </div>
+            <TitleHeaderStyle>Arnia Trello</TitleHeaderStyle>
+            <SectionHeaderStyle>
+                {userName && <TextHeaderStyle>Olá, {userName}</TextHeaderStyle>}
+                <div><StyledLink to="/">Sair</StyledLink></div>
+            </SectionHeaderStyle>
         </HeaderStyle>
     )
 }
